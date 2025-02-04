@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jcm.catalogo.entities.Category;
+import com.jcm.catalogo.dto.CategoryDTO;
 import com.jcm.catalogo.services.CategoryService;
 
 @RestController
@@ -19,10 +19,8 @@ public class CategoryResouce {
 	private CategoryService categoryService;
 	
 	@GetMapping
-	public ResponseEntity<List<Category>> findAll(){
-		List<Category> list = categoryService.findAll();
-		//list.add(new Category(1L, "Books"));
-		//list.add(new Category(2L, "Electronics"));
+	public ResponseEntity<List<CategoryDTO>> findAll(){
+		List<CategoryDTO> list = categoryService.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 }
