@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jcm.catalogo.dto.CategoryDTO;
 import com.jcm.catalogo.entities.Category;
 import com.jcm.catalogo.repositories.CategoryRepository;
-import com.jcm.catalogo.services.exceptions.EntityNotFoundException;
+import com.jcm.catalogo.services.exceptions.ResouceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -29,7 +31,7 @@ public class CategoryService {
 	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id) {
 		Optional<Category> obj = repository.findById(id);
-		Category category = obj.orElseThrow(()-> new EntityNotFoundException("Entity not found"));
+		Category category = obj.orElseThrow(()-> new ResouceNotFoundException("Entity not found"));
 		return new CategoryDTO(category);
 	}
 	@Transactional
@@ -38,6 +40,20 @@ public class CategoryService {
 		entity.setName(dto.getName());
 		entity = repository.save(entity);
 		return new CategoryDTO(entity);
+	}
+
+	@Transactional
+	public CategoryDTO update(Long id, CategoryDTO dto) {
+		//para atualizar utilizar o metodo abaixo para não ter que acessar 
+		//o banco duas vezes(pesquisar e atualizar)
+		try {
+			Category entity = repository.getReferenceById(id);
+			entity.setName(dto.getName());
+			entity = repository.save(entity);
+			return new CategoryDTO(entity);
+		} catch (EntityNotFoundException e) { //EntityNotFound.. do Jakarta
+			throw new ResouceNotFoundException("Id not found" + id);
+		}		//ResouceNotFo.. classe que foi criada na nossa aplicacao
 	}
 
 }
