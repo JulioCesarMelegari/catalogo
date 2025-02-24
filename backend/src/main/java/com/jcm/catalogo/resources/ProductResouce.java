@@ -30,6 +30,7 @@ public class ProductResouce {
 	@Autowired
 	private ProductService service;
 	
+	//forma mais enxuta de paginação
 	@GetMapping
 	public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable){
 		Page<ProductDTO> list = service.findAllPaged(pageable);
