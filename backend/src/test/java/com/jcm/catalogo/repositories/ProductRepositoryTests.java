@@ -18,12 +18,14 @@ public class ProductRepositoryTests {
 	private ProductRepository repository;
 	
 	private long existingId;
+	private long nonExistentId;
 	private long countTotalProducts;
 	
 	@BeforeEach
 	void setUp() throws Exception{
 		existingId = 1L;
 		countTotalProducts = 25L;
+		nonExistentId = 88;
 	}
 	
 	@Test
@@ -46,6 +48,18 @@ public class ProductRepositoryTests {
 		Assertions.assertFalse(result.isPresent());
 		//assertFalse - testa se é falso, ou seja se objeto result nao está resente
 		//result.isPresent - verifica se tem um objeto no result;
+	}
+	
+	@Test
+	public void returnSholdOptionalNonVoidWhenIdExist() {
+		Optional<Product> result = repository.findById(existingId);
+		Assertions.assertTrue(result.isPresent());
+	}
+	
+	@Test
+	public void returnSholdOptionalVoidWhenIdNonExist() {
+		Optional<Product> result = repository.findById(nonExistentId);
+		Assertions.assertTrue(result.isEmpty());
 	}
 
 }
